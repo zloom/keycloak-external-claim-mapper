@@ -1,0 +1,1 @@
+# keycloak-external-claim-mapper
