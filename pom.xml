@@ -19,7 +19,21 @@
         <keycloak.version>25.0.0</keycloak.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <auto-service.version>1.0.1</auto-service.version>
+        <dir>${project.build.directory}</dir>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <outputDirectory>${dir}</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencyManagement>
         <dependencies>
