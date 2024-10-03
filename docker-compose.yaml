@@ -1,0 +1,11 @@
+version: "3"
+services:
+  keycloak:
+    container_name: keycloak
+    build: 
+      context: keycloak
+      dockerfile: Dockerfile
+    command: start-dev
+    ports:
+      - 8080:8080
+    
