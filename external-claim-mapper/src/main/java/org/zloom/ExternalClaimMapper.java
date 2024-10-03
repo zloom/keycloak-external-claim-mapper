@@ -1,4 +1,4 @@
-package org.zloom.keycloak;
+package org.zloom;
 
 import com.google.auto.service.AutoService;
 import com.jayway.jsonpath.Configuration;
