@@ -1,0 +1,24 @@
+[
+  {
+    "httpRequest": {
+      "path": "/userprofile"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "roles": {
+          "values": [
+            "role1",
+            "role2",
+            "role3"
+          ]
+        }
+      }
+    }
+  }
+]

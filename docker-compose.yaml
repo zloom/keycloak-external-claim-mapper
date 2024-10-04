@@ -5,8 +5,21 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    command: start-dev
+    command: start-dev --import-realm
     ports:
       - 8080:8080
       - 5005:5005
+    volumes:
+      - ./keycloak/import:/opt/keycloak/data/import
+      - ./keycloak/data/h2:/opt/keycloak/data/h2:rw
+  mockserver:
+    container_name: mockserver
+    image: mockserver/mockserver:5.15.0
+    environment:
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /mockserver/initializer.json
+      SERVER_PORT: 8081
+    ports:
+      - 8081:8081
+    volumes:
+      - ./mockserver:/mockserver
     
