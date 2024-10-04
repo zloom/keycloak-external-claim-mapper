@@ -1,16 +1,20 @@
 version: "3"
+networks:
+  backend:
 services:
   postgres:
-      container_name: postgres
-      image: postgres:14.13
-      environment:
-        POSTGRES_DB: 'keycloak'
-        POSTGRES_USER: 'keycloak'
-        POSTGRES_PASSWORD: 'keycloak'
-      ports:
-        - 5432:5432
-      volumes:
-        - ./postgres/data:/var/lib/postgresql/data
+    container_name: postgres
+    image: postgres:14.13
+    environment:
+      POSTGRES_DB: 'keycloak'
+      POSTGRES_USER: 'keycloak'
+      POSTGRES_PASSWORD: 'keycloak'
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    networks:
+      - backend
   keycloak:
     container_name: keycloak
     build: 
@@ -21,7 +25,11 @@ services:
       - 8080:8080
       - 5005:5005
     volumes:
-      - ./keycloak/import:/opt/keycloak/data/import      
+      - ./keycloak/import:/opt/keycloak/data/import   
+    depends_on: 
+      - postgres   
+    networks:
+      - backend
   mockserver:
     container_name: mockserver
     image: mockserver/mockserver:5.15.0
@@ -32,4 +40,6 @@ services:
       - 8081:8081
     volumes:
       - ./mockserver:/mockserver
+    networks:
+      - backend
     
