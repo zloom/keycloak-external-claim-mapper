@@ -25,3 +25,6 @@ docker build -t keycloak . && docker run -p 8080:8080 keycloak start-dev
 Login and password is admin. Check `http://localhost:8080/admin/master/console/#/master/providers` find `external-claim-mapper` if extension is picked up by kecloak, it should be there.
 ## Configuration
 
+## License
+This project is licensed under the MIT License
+
