@@ -1,3 +1,6 @@
+[![GitHub Release](https://img.shields.io/github/v/release/zloom/keycloak-external-claim-mapper?color=blue)](https://github.com/zloom/keycloak-external-claim-mapper/releases)
+[![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/zloom/keycloak-external-claim-mapper/blob/main/LICENSE)
+
 # Keycloak external claim mapper
 Implementation of the keycloak internal SPI protocol-mapper, that allow to fetch remote http json data and include it into user JWT.
 ## Limitations
