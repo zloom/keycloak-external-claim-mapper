@@ -1,6 +1,5 @@
 [![GitHub Release](https://img.shields.io/github/v/release/zloom/keycloak-external-claim-mapper?color=blue)](https://github.com/zloom/keycloak-external-claim-mapper/releases)
 [![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/zloom/keycloak-external-claim-mapper/blob/main/LICENSE)
-
 # Keycloak external claim mapper
 Implementation of the keycloak internal SPI protocol-mapper, that allow to fetch remote http json data and include it into user JWT.
 ## Limitations
@@ -73,8 +72,9 @@ You can set **Json path** to `$.roles.values` it will result to:
 ]
 ...
 ```
-It is convinient when you don't have control over remote endpoint response shape, you can test json path expressions with https://jsonpath.com/
-
+It is convinient when you don't have control over remote endpoint response shape, you can test json path expressions with https://jsonpath.com
+### Error propagation
+An switch to propagate errors that may occurs during data fetch and transformation. Mapper will fail for result code not from 2XX or 3XX codes. This flag also will propagate error on jsonpath transformation. Error will be propagated to keycloak token endpoint that will cause 500 error on auth. Exact error should be visible in keycloak logs.
 ## License
 This project is licensed under the MIT License
 
