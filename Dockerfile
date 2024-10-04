@@ -16,10 +16,3 @@ COPY --from=build /deps /opt/keycloak/providers
 COPY --from=build /src/external-claim-mapper/target/. /opt/keycloak/providers
 
 RUN /opt/keycloak/bin/kc.sh build
-
-ENV KEYCLOAK_ADMIN="admin"
-ENV KEYCLOAK_ADMIN_PASSWORD="admin"
-ENV DEBUG='true'
-ENV DEBUG_SUSPEND='n'
-ENV DEBUG_PORT='*:5005'
-ENV KC_STORAGE=h2

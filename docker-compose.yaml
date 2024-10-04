@@ -1,17 +1,37 @@
 version: "3"
 services:
+  postgres:
+      container_name: postgres
+      image: postgres:14.13
+      environment:
+        POSTGRES_DB: 'keycloak'
+        POSTGRES_USER: 'keycloak'
+        POSTGRES_PASSWORD: 'keycloak'
+      ports:
+        - 5432:5432
+      volumes:
+        - ./postgres/data:/var/lib/postgresql/data
   keycloak:
     container_name: keycloak
     build: 
       context: .
       dockerfile: Dockerfile
+    environment:
+      KEYCLOAK_ADMIN: 'admin'
+      KEYCLOAK_ADMIN_PASSWORD: 'admin'
+      DEBUG: 'true'
+      DEBUG_SUSPEND: 'n'
+      DEBUG_PORT: '*:5005'
+      KC_DB: 'postgres'
+      KC_DB_URL: 'jdbc:postgresql://postgres:5432/keycloak'
+      KC_DB_USERNAME: 'keycloak'
+      KC_DB_PASSWORD: 'keycloak'
     command: start-dev --import-realm
     ports:
       - 8080:8080
       - 5005:5005
     volumes:
-      - ./keycloak/import:/opt/keycloak/data/import
-      - ./keycloak/data/h2:/opt/keycloak/data/h2:rw
+      - ./keycloak/import:/opt/keycloak/data/import      
   mockserver:
     container_name: mockserver
     image: mockserver/mockserver:5.15.0
