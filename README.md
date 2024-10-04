@@ -1,3 +1,6 @@
+[![GitHub Release](https://img.shields.io/github/v/release/zloom/keycloak-external-claim-mapper?color=blue)](https://github.com/zloom/keycloak-external-claim-mapper/releases)
+[![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/zloom/keycloak-external-claim-mapper/blob/main/LICENSE)
+
 # Keycloak external claim mapper
 Implementation of the keycloak internal SPI protocol-mapper, that allow to fetch remote http json data and include it into user JWT.
 ## Limitations
@@ -24,4 +27,7 @@ docker build -t keycloak . && docker run -p 8080:8080 keycloak start-dev
 ```
 Login and password is admin. Check `http://localhost:8080/admin/master/console/#/master/providers` find `external-claim-mapper` if extension is picked up by kecloak, it should be there.
 ## Configuration
+
+## License
+This project is licensed under the MIT License
 
