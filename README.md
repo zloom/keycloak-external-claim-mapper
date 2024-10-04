@@ -35,6 +35,45 @@ This is remote url to fetch json from with jwt auth token, you can optionally us
 `Authorization: Bearer eyJhb...28qdQ`
 Token value wiil be your user keycloak JWT, without mapper data yet.
 - Placeholder withh work as following: assume your remote urls is `http://localhost/user/profile` so that `http://localhost/user/**userId**/profile` will be transformed to `http://localhost/user/063943d2-d7ed-4bca-812b-506518c38228/profile` given that `063943d2-d7ed-4bca-812b-506518c38228` is keycloak user id.
+### Json path
+Optional json path expression to transform your remote endpoint response data.
+Given that **Token Claim Name** is configured as `user_roles` and remote endpoint response is:
+```
+{
+  "roles": {
+    "values": [
+      "role1",
+      "role2",
+      "role3"
+    ]
+  }
+}
+```
+In final jwt it will look as following:
+```
+...
+"user_roles": {
+  "roles": {
+    "values": [
+      "role1",
+      "role2",
+      "role3"
+    ]
+  }
+}
+...
+```
+You can set **Json path** to `$.roles.values` it will result to:
+```
+...
+"user_roles": [
+  "role1",
+  "role2",
+  "role3"
+]
+...
+```
+It is convinient when you don't have control over remote endpoint response shape, you can test json path expressions with https://jsonpath.com/
 
 ## License
 This project is licensed under the MIT License
