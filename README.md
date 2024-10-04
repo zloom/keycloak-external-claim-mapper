@@ -1,7 +1,7 @@
 # Keycloak external claim mapper
 Implementation of the keycloak internal SPI protocol-mapper, that allow to fetch remote http json data and include it into user JWT.
 ## Limitations
-Built and tested with Keycloak 25.0.0, you can build and test with other versions on demand.
+Built and tested with Keycloak 25.0.0, maven 3.6.3, openjdk21, you can build and test with other versions on demand.
 ## Installation
 To build Keycloak 25.0.0 image with extension from 0.0.1 release create dockerfile with following content:
 ```
