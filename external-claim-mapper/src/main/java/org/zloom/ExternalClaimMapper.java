@@ -29,7 +29,8 @@ import java.util.List;
 
 @AutoService(ProtocolMapper.class)
 public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements OIDCAccessTokenMapper, OIDCIDTokenMapper, UserInfoTokenMapper {
-    private static final String USER_ID_PLACEHOLDER = "**userId**";
+    private static final String USER_ID_PLACEHOLDER = "**uid**";
+    private static final String USER_NAME_PLACEHOLDER = "**uname**";
     private static final Logger LOGGER = Logger.getLogger(ExternalClaimMapper.class);
     private static final String REMOTE_URL_PROPERTY = "remoteUrl";
     private static final String JSON_PATH_EXPRESSION_PROPERTY = "jsonPath";
@@ -46,7 +47,7 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
                 .name(REMOTE_URL_PROPERTY)
                 .type(ProviderConfigProperty.STRING_TYPE)
                 .label("Remote url")
-                .helpText(String.format("Remote url to get claim for the given user, use %s as placeholder", USER_ID_PLACEHOLDER))
+                .helpText(String.format("Remote url to get claim for the given user, use %s and %s lowercase as placeholders", USER_ID_PLACEHOLDER, USER_NAME_PLACEHOLDER))
                 .add();
 
         propertiesBuilder
@@ -127,7 +128,8 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
     @Override
     protected void setClaim(IDToken token, ProtocolMapperModel model, UserSessionModel user, KeycloakSession session, ClientSessionContext clientSessionCtx) {
         var uid = user.getUser().getId();
-        var url = makeUrl(model, uid);
+        var uname = user.getUser().getUsername();
+        var url = makeUrl(model, uid, uname);
         if (url == null) {
             return;
         }
@@ -151,7 +153,7 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
         }
     }
 
-    private String makeUrl(ProtocolMapperModel mappingModel, String uid) {
+    private String makeUrl(ProtocolMapperModel mappingModel, String uid, String uname) {
         var remoteUrl = mappingModel.getConfig().get(REMOTE_URL_PROPERTY);
         if (IsEmpty(remoteUrl)) {
             LOGGER.warn("Remote url is required");
@@ -159,7 +161,8 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
         }
 
         try {
-            return new URL(remoteUrl.replace(USER_ID_PLACEHOLDER, uid)).toString();
+            var remoteUrlWithPlaceholders = remoteUrl.replace(USER_ID_PLACEHOLDER, uid).replace(USER_NAME_PLACEHOLDER, uname);
+            return new URL(remoteUrlWithPlaceholders).toString();
         } catch (MalformedURLException e) {
             LOGGER.errorv(e, "Could not create request url");
             return null;
