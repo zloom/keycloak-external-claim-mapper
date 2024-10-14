@@ -19,6 +19,7 @@ import org.keycloak.protocol.oidc.mappers.OIDCIDTokenMapper;
 import org.keycloak.protocol.oidc.mappers.UserInfoTokenMapper;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.provider.ProviderConfigurationBuilder;
+import org.keycloak.models.IdentityProviderMapperModel;
 import org.keycloak.representations.IDToken;
 import org.jboss.logging.Logger;
 import org.keycloak.util.JsonSerialization;
@@ -26,6 +27,7 @@ import org.keycloak.util.JsonSerialization;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 @AutoService(ProtocolMapper.class)
 public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements OIDCAccessTokenMapper, OIDCIDTokenMapper, UserInfoTokenMapper {
@@ -36,6 +38,7 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
     private static final String JSON_PATH_EXPRESSION_PROPERTY = "jsonPath";
     private static final String PROPAGATE_REMOTE_ERROR_PROPERTY = "propagateError";
     private static final String USER_AUTH_PROPERTY = "userAuth";
+    private static final String REQUEST_HEADERS_PROPERTY = "requestHeaders";
     static final List<ProviderConfigProperty> PROPERTIES_CONFIG;
     static final Configuration JSON_PATH_CONFIG;
 
@@ -74,6 +77,14 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
                 .label("User authentication")
                 .defaultValue("false")
                 .helpText("Add current session user bearer token to remote endpoint request: Authorization: Bearer: ey... ")
+                .add();
+
+        propertiesBuilder
+                .property()
+                .name(REQUEST_HEADERS_PROPERTY)
+                .type(ProviderConfigProperty.MAP_TYPE)
+                .label("Request headers")
+                .helpText("Configure headers attached to claim data request")
                 .add();
 
         PROPERTIES_CONFIG = propertiesBuilder.build();
@@ -195,15 +206,23 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
         return request.auth(encodedIdToken);
     }
 
-    private SimpleHttp setHeaders(SimpleHttp request) {
-        return request.header("Content-Type", "application/json");
+    private SimpleHttp setHeaders(ProtocolMapperModel model, SimpleHttp request) {
+        var mapperModel = new IdentityProviderMapperModel();
+        mapperModel.setConfig(model.getConfig());
+        var headers = mapperModel.getConfigMap(REQUEST_HEADERS_PROPERTY);
+        for (var header : headers.entrySet()) {
+            var value = String.join(", ", header.getValue());
+            request.header(header.getKey(), value);
+        }
+
+        return request;
     }
 
     private String getClaimData(ProtocolMapperModel model, IDToken token, String url, String uid, KeycloakSession session) {
         try {
             LOGGER.infov("Getting claim data for user={0} from url={1}", uid, url);
             var request = SimpleHttp.doGet(url, session);
-            var response = setHeaders(setAuth(model, request, session, token)).asResponse();
+            var response = setHeaders(model, setAuth(model, request, session, token)).asResponse();
             var status = response.getStatus();
             var success = status >= 200 && status < 400;
             if (!success) {
