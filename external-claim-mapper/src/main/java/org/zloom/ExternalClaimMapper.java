@@ -34,6 +34,7 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
     private static final String REMOTE_URL_PROPERTY = "remoteUrl";
     private static final String JSON_PATH_EXPRESSION_PROPERTY = "jsonPath";
     private static final String PROPAGATE_REMOTE_ERROR_PROPERTY = "propagateError";
+    private static final String USER_AUTH_PROPERTY = "userAuth";
     static final List<ProviderConfigProperty> PROPERTIES_CONFIG;
     static final Configuration JSON_PATH_CONFIG;
 
@@ -63,6 +64,15 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
                 .label("Error propagation")
                 .defaultValue("false")
                 .helpText("If enabled will throw errors, on remote endpoint error codes and on json transformation.")
+                .add();
+
+        propertiesBuilder
+                .property()
+                .name(USER_AUTH_PROPERTY)
+                .type(ProviderConfigProperty.BOOLEAN_TYPE)
+                .label("User authentication")
+                .defaultValue("false")
+                .helpText("Add current session user bearer token to remote endpoint request: Authorization: Bearer: ey... ")
                 .add();
 
         PROPERTIES_CONFIG = propertiesBuilder.build();
@@ -108,6 +118,10 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
 
     public static boolean propagateError(ProtocolMapperModel model) {
         return "true".equals(model.getConfig().get(PROPAGATE_REMOTE_ERROR_PROPERTY));
+    }
+
+    public static boolean userAuth(ProtocolMapperModel model) {
+        return "true".equals(model.getConfig().get(USER_AUTH_PROPERTY));
     }
 
     @Override
@@ -171,6 +185,9 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
     }
 
     private SimpleHttp setAuth(ProtocolMapperModel model, SimpleHttp request, KeycloakSession session, IDToken token) {
+        if (!userAuth(model)) {
+            return request;
+        }
         var encodedIdToken = session.tokens().encodeAndEncrypt(token);
         return request.auth(encodedIdToken);
     }
