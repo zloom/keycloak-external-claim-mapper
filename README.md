@@ -1,6 +1,6 @@
 [![GitHub Release](https://img.shields.io/github/v/release/zloom/keycloak-external-claim-mapper?color=blue)](https://github.com/zloom/keycloak-external-claim-mapper/releases)
 [![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/zloom/keycloak-external-claim-mapper/blob/main/LICENSE)
-# Keycloak external claim mapper
+# Keycloak External Claim Mapper
 Implementation of the keycloak internal SPI protocol-mapper, that allows to fetch remote http json data and include it into user JWT.
 ## Limitations
 Built and tested with Keycloak 25.0.0, maven 3.6.3, openjdk21, you can build and test with other versions if required.
@@ -27,7 +27,7 @@ Build and run it with following command:
 ```
 docker build -t keycloak . && docker run -p 8080:8080 keycloak start-dev
 ```
-Login and password are `admin`. Check `http://localhost:8080/admin/master/console/#/master/providers` and find `external-claim-mapper` if extension is picked up by kecloak, it should be there.
+Login and password are `admin`. Check `http://localhost:8080/admin/master/console/#/master/providers` and find `external-claim-mapper` if extension is picked up by Keycloak, it should be there.
 ## Configuration
 There are 5 fields to configure, except standard protocol mapper provider configuration.
 ### Remote url
@@ -75,7 +75,7 @@ It is convenient when you don't have control over remote endpoint response shape
 ### Error propagation
 A switch to propagate errors that may occurs during data fetch and transformation. Mapper will fail for result code not from 2XX or 3XX codes. This flag also will propagate error on jsonpath transformation. Error will be propagated to keycloak token endpoint that will cause 500 error on auth. Exact error should be visible in keycloak logs.
 ### User authentication
-When this options is enabled, extension will add user session JWT token, of cource this token will not contain remote claims yet. Token will be added with following header `"Authorization" : "Bearer eyJ..."`
+When this options is enabled, extension will add user session JWT token, of course this token will not contain remote claims yet. Token will be added with following header `"Authorization" : "Bearer eyJ..."`
 ### Request headers
 Set of key value pairs which you can use to configure custom request headers, when multiple values provided with same key header value will be joined with comma as following `"X-key": "value1, value2"`. You can use `**uid**` and `**uname**` placeholders same like in remote url.
 ## License
