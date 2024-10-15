@@ -84,7 +84,7 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
                 .name(REQUEST_HEADERS_PROPERTY)
                 .type(ProviderConfigProperty.MAP_TYPE)
                 .label("Request headers")
-                .helpText("Configure headers attached to claim data request")
+                .helpText(String.format("Configure headers attached to claim data request, use %s and %s lowercase as placeholders", USER_ID_PLACEHOLDER, USER_NAME_PLACEHOLDER))
                 .add();
 
         PROPERTIES_CONFIG = propertiesBuilder.build();
@@ -145,7 +145,7 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
             return;
         }
 
-        var claimData = getClaimData(model, token, url, uid, session);
+        var claimData = getClaimData(model, token, url, uid, uname, session);
         if (IsEmpty(claimData)) {
             return;
         }
@@ -206,23 +206,24 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
         return request.auth(encodedIdToken);
     }
 
-    private SimpleHttp setHeaders(ProtocolMapperModel model, SimpleHttp request) {
+    private SimpleHttp setHeaders(ProtocolMapperModel model, SimpleHttp request, String uid, String uname) {
         var mapperModel = new IdentityProviderMapperModel();
         mapperModel.setConfig(model.getConfig());
         var headers = mapperModel.getConfigMap(REQUEST_HEADERS_PROPERTY);
         for (var header : headers.entrySet()) {
             var value = String.join(", ", header.getValue());
-            request.header(header.getKey(), value);
+            var valueWithPlaceholders = value.replace(USER_ID_PLACEHOLDER, uid).replace(USER_NAME_PLACEHOLDER, uname);
+            request.header(header.getKey(), valueWithPlaceholders);
         }
 
         return request;
     }
 
-    private String getClaimData(ProtocolMapperModel model, IDToken token, String url, String uid, KeycloakSession session) {
+    private String getClaimData(ProtocolMapperModel model, IDToken token, String url, String uid, String uname, KeycloakSession session) {
         try {
             LOGGER.infov("Getting claim data for user={0} from url={1}", uid, url);
             var request = SimpleHttp.doGet(url, session);
-            var response = setHeaders(model, setAuth(model, request, session, token)).asResponse();
+            var response = setHeaders(model, setAuth(model, request, session, token), uid, uname).asResponse();
             var status = response.getStatus();
             var success = status >= 200 && status < 400;
             if (!success) {
