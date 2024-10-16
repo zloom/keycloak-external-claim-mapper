@@ -1,5 +1,5 @@
 [![GitHub Release](https://img.shields.io/github/v/release/zloom/keycloak-external-claim-mapper?color=blue)](https://github.com/zloom/keycloak-external-claim-mapper/releases)
-[![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/zloom/keycloak-external-claim-mapper/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/badge/License-Apache-blue.svg)](https://github.com/zloom/keycloak-external-claim-mapper/blob/main/LICENSE)
 # Keycloak External Claim Mapper
 Implementation of the keycloak internal SPI protocol-mapper, that allows to fetch remote http json data and include it into user JWT.
 ## Limitations
@@ -79,5 +79,5 @@ When this options is enabled, extension will add user session JWT token, of cour
 ### Request headers
 Set of key value pairs which you can use to configure custom request headers, when multiple values provided with same key header value will be joined with comma as following `"X-key": "value1, value2"`. You can use `**uid**` and `**uname**` placeholders same like in remote url.
 ## License
-This project is licensed under the MIT License
+This project is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
