@@ -18,7 +18,7 @@ RUN \
 
 FROM quay.io/keycloak/keycloak:25.0.0 as keycloak
 
-COPY --from=build /build /opt/keycloak/providers
+COPY --from=build /providers /opt/keycloak/providers
 
 ENV KEYCLOAK_ADMIN="admin"
 ENV KEYCLOAK_ADMIN_PASSWORD="admin"
