@@ -210,6 +210,10 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
         var mapperModel = new IdentityProviderMapperModel();
         mapperModel.setConfig(model.getConfig());
         var headers = mapperModel.getConfigMap(REQUEST_HEADERS_PROPERTY);
+        if (headers == null) {
+            return request;
+        }
+
         for (var header : headers.entrySet()) {
             var value = String.join(", ", header.getValue());
             var valueWithPlaceholders = value.replace(USER_ID_PLACEHOLDER, uid).replace(USER_NAME_PLACEHOLDER, uname);
