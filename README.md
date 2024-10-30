@@ -27,7 +27,7 @@ Build and run it with following command:
 ```
 docker build -t keycloak . && docker run -p 8080:8080 keycloak start-dev
 ```
-Login and password are `admin`. Check `http://localhost:8080/admin/master/console/#/master/providers` and find `external-claim-mapper` if extension is picked up by Keycloak, it should be there.
+Login and password are `admin`. Check `http://localhost:8080/admin/master/console/#/master/providers` and find `external-claim-mapper` if extension is picked up by Keycloak, it should be there. Check detailed development setup guide [here](https://www.zloom.org/blogs/debugging-keycloak-extension?utm_source=keycloak-external-claim-mapper).
 ## Configuration
 There are 5 fields to configure, except standard protocol mapper provider configuration.
 ### Remote url
