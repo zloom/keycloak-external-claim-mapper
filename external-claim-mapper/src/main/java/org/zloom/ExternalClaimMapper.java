@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -178,7 +179,7 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
         var encodedEmail = IsEmpty(email) ? "" : URLEncoder.encode(email, StandardCharsets.UTF_8);
 
         try {
-            var remoteUrlWithPlaceholders = remoteUrl.replace(USER_ID_PLACEHOLDER, uid).replace(USER_NAME_PLACEHOLDER, uname).replace(USER_EMAIL_PLACEHOLDER, encodedEmail);
+            var remoteUrlWithPlaceholders = remoteUrl.replace(USER_ID_PLACEHOLDER, Objects.toString(uid, \"\")).replace(USER_NAME_PLACEHOLDER, Objects.toString(uname, \"\")).replace(USER_EMAIL_PLACEHOLDER, encodedEmail);
             return new URL(remoteUrlWithPlaceholders).toString();
         } catch (MalformedURLException e) {
             LOGGER.errorv(e, "Could not create request url");
@@ -227,7 +228,7 @@ public class ExternalClaimMapper extends AbstractOIDCProtocolMapper implements O
 
         for (var header : headers.entrySet()) {
             var value = String.join(", ", header.getValue());
-            var valueWithPlaceholders = value.replace(USER_ID_PLACEHOLDER, uid).replace(USER_NAME_PLACEHOLDER, uname).replace(USER_EMAIL_PLACEHOLDER, email);
+            var valueWithPlaceholders = value.replace(USER_ID_PLACEHOLDER, Objects.toString(uid, \"\")).replace(USER_NAME_PLACEHOLDER, Objects.toString(uname, \"\")).replace(USER_EMAIL_PLACEHOLDER, Objects.toString(email, \"\"));
             request.header(header.getKey(), valueWithPlaceholders);
         }
 
